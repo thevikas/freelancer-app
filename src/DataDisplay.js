@@ -2,11 +2,12 @@ import React, { useEffect } from 'react';
 import { View, Text, Button } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import { dataStore } from './DataStore'; // Import your store
+import Config from "react-native-config";
 
 const DataDisplay = observer(() => {
   useEffect(() => {
     console.log("howdy");
-    dataStore.fetchData('YOUR_API_ENDPOINT_HERE');
+    dataStore.fetchData(Config.API_URL + "/projects");
   }, []);
 
   return (
