@@ -25,7 +25,7 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-
+import { useNavigation } from '@react-navigation/native';
 type SectionProps = PropsWithChildren<{
   title: string;
 }>;
@@ -63,7 +63,7 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 
 function AppView(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
-
+  const navigation = useNavigation();
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -85,6 +85,11 @@ function AppView(): React.JSX.Element {
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.tsx</Text> to change this
             screen and then come back to see your edits.
+
+            <Button
+                title="Go to DataDisplay"
+                onPress={() => navigation.navigate('DataDisplay')}
+            />
           </Section>
           <Section title="See Your Changes">
             <ReloadInstructions />

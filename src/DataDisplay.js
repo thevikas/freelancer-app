@@ -5,6 +5,7 @@ import { dataStore } from './DataStore'; // Import your store
 
 const DataDisplay = observer(() => {
   useEffect(() => {
+    console.log("howdy");
     dataStore.fetchData('YOUR_API_ENDPOINT_HERE');
   }, []);
 
