@@ -8,6 +8,7 @@
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+    Button,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -42,6 +43,11 @@ function Section({children, title}: SectionProps): React.JSX.Element {
         ]}>
         {title}
       </Text>
+      <Button title="Press me" onPress={() => 
+            //navigate to view1
+            console.log('Button pressed')
+            
+        } />
       <Text
         style={[
           styles.sectionDescription,
@@ -55,7 +61,7 @@ function Section({children, title}: SectionProps): React.JSX.Element {
   );
 }
 
-function App(): React.JSX.Element {
+function AppView(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -115,4 +121,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default AppView;
