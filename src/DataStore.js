@@ -1,26 +1,36 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from 'mobx';
 
 class DataStore {
-  data = [];
-  status = "pending"; // "pending", "done", or "error"
+    status = 'pending';
+    data = [];
 
-  constructor() {
-    makeAutoObservable(this);
-  }
-
-  async fetchData(url) {
-    this.data = [];
-    this.status = "pending";
-    try {
-      const response = await fetch(url);
-      const jsonData = await response.json();
-      this.data = jsonData;
-      this.status = "done";
-    } catch (error) {
-      this.status = "error";
-      console.error("Failed to fetch data:", error);
+    constructor() {
+        makeAutoObservable(this);
     }
-  }
+
+    fetchData(url) {
+        console.log("fetchData",url);
+        this.setStatus('pending');
+        fetch(url)
+            .then((response) => response.json())
+            .then((jsonData) => {
+                runInAction(() => {
+                    console.log("jsonData",jsonData);
+                    this.data = jsonData;
+                    this.status = 'done';
+                });
+            })
+            .catch((error) => {
+                runInAction(() => {
+                    this.status = 'error';
+                    // Optionally handle error state or data here
+                });
+            });
+    }
+
+    setStatus(newStatus) {
+        this.status = newStatus; // Direct assignment is okay here because setStatus is an action
+    }
 }
 
 export const dataStore = new DataStore();

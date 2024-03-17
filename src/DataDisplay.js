@@ -5,26 +5,30 @@ import { dataStore } from './DataStore'; // Import your store
 import Config from "react-native-config";
 
 const DataDisplay = observer(() => {
-  useEffect(() => {
-    console.log("howdy");
-    dataStore.fetchData(Config.API_URL + "/projects");
-  }, []);
+    useEffect(() => {
+        console.log("howdy");
+        //dataStore.fetchData(Config.API_URL + "/projects");
+    }, []);
 
-  return (
-    <View>
-      {dataStore.status === 'pending' && <Text>Loading...</Text>}
-      {dataStore.status === 'error' && <Text>Error fetching data.</Text>}
-      {dataStore.status === 'done' && (
-        dataStore.data.map((item, index) => (
-          <View key={index}>
-            {/* Display your data based on your JSON structure */}
-            <Text>{item.someField}</Text>
-          </View>
-        ))
-      )}
-      <Button title="Refresh" onPress={() => dataStore.fetchData('YOUR_API_ENDPOINT_HERE')} />
-    </View>
-  );
+    return (
+        <View>
+            {dataStore.status === 'pending' && <Text>Loading...</Text>}
+            {dataStore.status === 'error' && <Text>Error fetching data.</Text>}
+            {dataStore.status === 'done' && (
+                // Convert object values to an array and map over it
+                Object.entries(dataStore.data).map(([key, item], index) => (
+                    <View key={index}>
+                        {/* Display key and other details from your JSON structure */}
+                        <Text>Name: {item.name}</Text>
+                        <Text>Date: {item.Dated}</Text>
+                        <Text>Income: {item.Income}</Text>
+                        {/* Add more fields as needed */}
+                    </View>
+                ))
+            )}
+            <Button title="Refresh" onPress={() => dataStore.fetchData(Config.API_URL + "/projects")} />
+        </View>
+    );
 });
 
 export default DataDisplay;
