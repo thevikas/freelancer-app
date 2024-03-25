@@ -1,21 +1,23 @@
 import { makeAutoObservable, runInAction } from 'mobx';
+import Config from "react-native-config";
 
-class DataStore {
+class ProjectsStore {
     status = 'pending';
     data = [];
-
+    TaskNow = {};
     constructor() {
         makeAutoObservable(this);
     }
 
-    fetchData(url) {
-        console.log("fetchData",url);
+    fetchProjects() {
+        const url = Config.API_URL + "/projects"
+        console.log("fetchProjects", url);
         this.setStatus('pending');
         fetch(url)
             .then((response) => response.json())
             .then((jsonData) => {
                 runInAction(() => {
-                    console.log("jsonData",jsonData);
+                    console.log("jsonData", jsonData);
                     this.data = jsonData;
                     this.status = 'done';
                 });
@@ -33,4 +35,4 @@ class DataStore {
     }
 }
 
-export const dataStore = new DataStore();
+export const projectsStore = new ProjectsStore();

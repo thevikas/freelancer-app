@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { observer } from 'mobx-react-lite';
-import { dataStore } from './DataStore'; // Import your store
-import Config from "react-native-config";
+import { projectsStore } from './ProjectsStore'; // Import your store
 import { DataTable } from 'react-native-paper';
 import moment from 'moment';
 import { set } from 'mobx';
@@ -11,7 +10,7 @@ function projectRow({ index, name, Dated, Income, isSummary, project, onRowPress
     boldText = isSummary ? { fontWeight: 'bold' } : {};
     Dated = isSummary ? "" : Dated;
     const s1 = isSummary ? styles.summary : {}; 
-    const d2 = moment(Dated, "YYYY-MM-DD H:mm:ss").fromNow();
+    const d2 = isSummary ? "" : moment(Dated, "YYYY-MM-DD H:mm:ss").fromNow();
     const projectCellStyle = project === name ? { 
         fontWeight: 'bold',
         backgroundColor: 'lightblue'
@@ -51,8 +50,8 @@ function projectTaskInfo(recent,onTaskRowPress) {
 function projectTaskRow({ index, task, last_time, onTaskRowPress}) {
     const d2 = moment(last_time, "YYYY-MM-DD H:mm:ss").fromNow();
     return (
-        <DataTable.Row key={index} onPress={() => onTaskRowPress(name)}>
-            <DataTable.Cell>{task}</DataTable.Cell>
+        <DataTable.Row key={index} onPress={() => onTaskRowPress(task)}>
+            <Text>{task}</Text>
             <DataTable.Cell numeric>{d2}</DataTable.Cell>
         </DataTable.Row>
     );
@@ -64,7 +63,7 @@ const DataDisplay = observer(() => {
 
     useEffect(() => {
         console.log("howdy");
-        //dataStore.fetchData(Config.API_URL + "/projects");
+        //projectsStore.fetchData(Config.API_URL + "/projects");
     }, []);
 
     const onRowPress = (project) => {
@@ -78,9 +77,9 @@ const DataDisplay = observer(() => {
 
     return (
         <View style={styles.screenPad}>
-            {dataStore.status === 'pending' && <Text>Loading...</Text>}
-            {dataStore.status === 'error' && <Text>Error fetching data.</Text>}
-            <Button title="Refresh" onPress={() => dataStore.fetchData(Config.API_URL + "/projects")} />
+            {projectsStore.status === 'pending' && <Text>Loading...</Text>}
+            {projectsStore.status === 'error' && <Text>Error fetching data.</Text>}
+            <Button title="Refresh" onPress={() => projectsStore.fetchProjects()} />
             <DataTable>
                 <DataTable.Header>
                     <DataTable.Title sortDirection='descending'>
@@ -89,9 +88,9 @@ const DataDisplay = observer(() => {
                     <DataTable.Title numeric>Date</DataTable.Title>
                     <DataTable.Title numeric>Income</DataTable.Title>
                 </DataTable.Header>
-                {dataStore.status === 'done' && (
+                {projectsStore.status === 'done' && (
                     // Convert object values to an array and map over it
-                    Object.entries(dataStore.data).map(([key, item], index) => {
+                    Object.entries(projectsStore.data).map(([key, item], index) => {
                         isSummary = item.name === "Summary";
                         return projectRow({ index, ...item, isSummary, project, onRowPress, onTaskRowPress})
                     })
