@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, Button, StyleSheet, ScrollView } from 'react-native';
 import { observer } from 'mobx-react-lite';
 import { projectsStore } from './ProjectsStore'; // Import your store
-import { DataTable } from 'react-native-paper';
+import { DataTable, Switch } from 'react-native-paper';
 import moment from 'moment';
 import { set } from 'mobx';
 
@@ -60,6 +60,7 @@ function projectTaskRow({ index, task, last_time, onTaskRowPress}) {
 const DataDisplay = observer(() => {
 
     const [project, setProject] = React.useState(null);
+    const [showAll, setShowAll] = React.useState(false);
 
     useEffect(() => {
         console.log("howdy");
@@ -76,10 +77,25 @@ const DataDisplay = observer(() => {
     }
 
     return (
-        <View style={styles.screenPad}>
+        <ScrollView style={styles.screenPad}>
             {projectsStore.status === 'pending' && <Text>Loading...</Text>}
             {projectsStore.status === 'error' && <Text>Error fetching data.</Text>}
-            <Button title="Refresh" onPress={() => projectsStore.fetchProjects()} />
+            {/* flex row */}
+            <View style={
+                {
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                }
+            }>
+                <Text>Show All Projects</Text>
+                <Switch value={showAll} onValueChange={() => 
+                        {
+                            setShowAll(!showAll);
+                            projectsStore.fetchProjects(!showAll);
+                        }
+                    } />
+            </View>
+            <Button title="Refresh" onPress={() => projectsStore.fetchProjects(showAll)} />
             <DataTable>
                 <DataTable.Header>
                     <DataTable.Title sortDirection='descending'>
@@ -96,7 +112,7 @@ const DataDisplay = observer(() => {
                     })
                 )}
             </DataTable>
-        </View>
+        </ScrollView>
     );
 });
 

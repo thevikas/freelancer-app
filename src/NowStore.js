@@ -1,5 +1,6 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import Config from "react-native-config";
+import base64 from 'react-native-base64';
 
 class NowStore {
     status = 'pending';
@@ -17,9 +18,15 @@ class NowStore {
 
     fetchNow() {
         const url = Config.API_URL + "/now"
+        const apiuser = Config.API_USER;
+        const apipass = Config.API_PASSWORD;
         console.log("fetchNow", url);
         this.setStatus('pending');
-        fetch(url)
+        const headers = new Headers();
+        if (apiuser && apipass)
+            headers.set('Authorization', 'Basic ' + base64.encode(apiuser + ":" + apipass));
+        //also use API_USER and API_PASSWORD
+        fetch(url, { headers })
         .then((response) => response.json())
         .then((jsonData) => {
             console.log("fetchNow jsonData", jsonData);
@@ -47,16 +54,11 @@ class NowStore {
     }
 
     postNow(task) {
-        const url = Config.API_URL + "/now"
+        var url = Config.API_URL + "/now"
         console.log("postNow", url);
         this.setStatus('pending');
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ task })
-        })
+        url = url + "?log=" + task;
+        fetch(url)
         .then((response) => response.json())
         .then((jsonData) => {
             this.handleNowResponse(jsonData);
