@@ -8,6 +8,7 @@
     "build-android-www": "cd android && cross-env ENVFILE=.env.www ./gradlew assembleRelease && cd ..",
     "ios": "cross-env ENVFILE=.env react-native run-ios",
     "lint": "eslint .",
+    "lint-android-www": "cd android && cross-env ENVFILE=.env.www ./gradlew -Pci --console=plain :app:lintDebug -PbuildDir=lint",
     "start": "cross-env ENVFILE=.env react-native start",
     "start-www": "cross-env ENVFILE=.env.www react-native start",
     "test": "jest"
