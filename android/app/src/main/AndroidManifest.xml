@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.awesome070">
+  package="com.thevikas.freelancer">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
